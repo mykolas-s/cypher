@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Crypt your message!
+{% endblock %}
+
+{% block main %}
+    <form action="/" method="post">
+
+        <div class="checkbox">
+            English: <input id="en" name="lang" value="english" type="radio" checked>
+            Lithuanian: <input id="lt" name="lang" value="lithuanian" type="radio">             
+        </div><br>
+
+        <b>CHOOSE CYPHER </b>
+
+        <div class="checkbox">
+            Caesar: <input id="caesar" name="cypher" value="caesar" type="radio" checked> 
+            SHIFT SIZE: <input autocomplete="off" autofocus class="form-control" id="shifts" name="shift" type="text"/>
+        </div>            
+        
+        <div>    
+            Vigenere: <input id="vigenere" name="cypher" value="vigenere" type="radio">              
+            KEY: <input autocomplete="off" autofocus class="form-control" id="shiftw" name="key" type="text"/>
+        </div>
+
+        <div>
+            Text: <input autocomplete="off" autofocus class="form-control" id="pltxt" name="plaintext" type="text"/>
+            <input id="enc" class="btn btn-primary" name="enc_dec" type="submit" value="Encrypt">
+            <input id="dec" class="btn btn-primary" name="enc_dec" type="submit" value="Decrypt">
+            <input id="crack" class="btn btn-primary" name="enc_dec" type="submit" value="Break">
+        </div>
+    </form>
+
+    <div>
+        <br>
+        <h4><b> {{title}} </b></h4>
+    </div>
+
+    <div class="cyp">
+        {{cyptext}} 
+    </div>
+
+    {% for item in broken %}
+    <div>
+        {{ item }} 
+    </div>
+    {% endfor %}
+
+    <div>
+        <br>
+        <h4><b> {{footnote}} </b></h4>
+    </div>
+
+    <div>
+        {{cyptext2}} 
+    </div>
+
+{% endblock %}
