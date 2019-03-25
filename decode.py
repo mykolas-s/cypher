@@ -67,7 +67,7 @@ def crack_vigenere(
 
     items = []  # a list for final key-decoded text pairs
     for k_len in range(
-            3, 6):  # we will be testing keys of lenght from 3 to 10
+            3, 11):  # we will be testing keys of lenght from 3 to 10
         rec = nbest()
         # first, calculate scores of every possible trigram + a's (as a key)
         # and add N best scores to rec
