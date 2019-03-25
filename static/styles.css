@@ -7,7 +7,7 @@ nav .navbar-brand
 /* colors for brand */
 nav .navbar-brand .blue
 {
-    color: #4270a8;
+    color: #271ae07e;
 }
 
 main .form-control
@@ -15,15 +15,15 @@ main .form-control
     /* center form controls */
     display: inline-block;
 
-    /* override Bootstrap's 100% width for form controls
-    width: auto; */
+    /* override Bootstrap's 100% width for form controls */
+    width: auto;
 }
 
 main
 {
     /* scroll horizontally as needed */
     overflow-x: auto;
-    
+
     /* center contents */
     text-align: center;
 }

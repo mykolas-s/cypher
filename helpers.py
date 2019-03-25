@@ -3,7 +3,6 @@ from math import log10
 
 
 def apology(message, code=400):
-    # Render message as an apology to user.
     def escape(s):
         # Escape special characters.
         # https://github.com/jacebrowning/memegen#special-characters
@@ -19,9 +18,10 @@ class ngram:
     def __init__(self, f="ngrams/english_quadgrams.txt"):
         # load a file containing ngrams and counts, calculate log probabilities
         self.ngrams = {}
-        for line in open(f):
-            key, count = line.lower().split(" ")
-            self.ngrams[key] = int(count)
+        with open(f) as file:
+            for line in file:
+                key, count = line.lower().split(" ")
+                self.ngrams[key] = int(count)
         self.L = len(key)
         self.N = sum(self.ngrams.values())
         # calculate log probabilities of ngrams

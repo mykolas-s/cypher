@@ -4,40 +4,43 @@ from helpers import apology
 from caesar import Caesar
 from vigenere import Vigenere
 from decode import crack_cipher
+from string import ascii_lowercase, ascii_uppercase, digits
 # Configure application
 app = Flask(__name__)
 
+lt_lang, lt_alphabet = ['aąbcčdeęėfghiįyjklmnoprsštuųūvzž', 'AĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽ'], 32
 
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == 'POST':
         # set language
         if request.form.get("lang") == 'english':
-            LANG, ALPHABET = ['abcdefghijklmnopqrstuvwxyz',
-                              'ABCDEFGHIJKLMNOPQRSTUVWXYZ'], 26
+            LANG, ALPHABET = [ascii_lowercase, ascii_uppercase], len(ascii_lowercase)
         elif request.form.get("lang") == 'lithuanian':
-            LANG, ALPHABET = ['aąbcčdeęėfghiįyjklmnoprsštuųūvzž',
-                              'AĄBCČDEĘĖFGHIĮYJKLMNOPRSŠTUŲŪVZŽ'], 32
+            LANG, ALPHABET = lt_lang, lt_alphabet
         # get plaintext
-        pt = request.form.get('plaintext')
+        plaintext = request.form.get('plaintext')
 
-        # DECODE WITHOUT KNOWING CYPHER
+        # BREAK (WITHOUT KNOWING CYPHER TYPE)
         if request.form.get("enc_dec") == ("Break"):
-            broken = crack_cipher(pt, LANG)
-            if len(broken) == 2:
-                key, text = str(broken[0]) + ", Caesar", broken[1]
-                return render_template(
-                    "index.html",
-                    cyptext=key,
-                    title="KEY, CYPHER: ",
-                    footnote="DECRYPTED TEXT: ",
-                    cyptext2=text)
-            else:
-                return render_template(
-                    "index.html",
-                    broken=broken,
-                    title="POSSIBLE KEYS AND DECRYPTED TEXT USING THEM:")
-
+            try:
+                broken = crack_cipher(plaintext, LANG)
+                if len(broken) == 2:
+                    key, text = str(broken[0]) + ", Caesar", broken[1]
+                    return render_template(
+                        "index.html",
+                        cyptext=key,
+                        title="KEY, CYPHER: ",
+                        footnote="DECRYPTED TEXT: ",
+                        cyptext2=text)
+                else:
+                    return render_template(
+                        "index.html",
+                        broken=broken,
+                        title="POSSIBLE KEYS AND DECRYPTED TEXT USING THEM:")
+            except ValueError:
+                return apology(
+                    "'break' function can be used on english text only. Sorry!")
         # CAESAR
         if request.form.get("cypher") == 'caesar':
             # set key. If key is not a number, return apology
@@ -49,7 +52,7 @@ def index():
             # check if user uses encryption or decryption
             if request.form.get("enc_dec") == 'Encrypt':
                 try:
-                    ctext = Caesar(key).caesar_encode(pt, LANG, ALPHABET)
+                    ctext = Caesar(key).caesar_encode(plaintext, LANG, ALPHABET)
                     return render_template(
                         "index.html", cyptext=ctext, title="ENCRYPTED TEXT:")
                 except ValueError:
@@ -58,7 +61,7 @@ def index():
 
             elif request.form.get("enc_dec") == 'Decrypt':
                 try:
-                    ctext = Caesar(key).caesar_decode(pt, LANG, ALPHABET)
+                    ctext = Caesar(key).caesar_decode(plaintext, LANG, ALPHABET)
                     return render_template(
                         "index.html", cyptext=ctext, title="DECRYPTED TEXT:")
                 except ValueError:
@@ -73,7 +76,7 @@ def index():
 
             if request.form.get("enc_dec") == 'Encrypt':
                 try:
-                    ctext = Vigenere(key).vigenere_encode(pt, LANG, ALPHABET)
+                    ctext = Vigenere(key).vigenere_encode(plaintext, LANG, ALPHABET)
                     return render_template(
                         "index.html", cyptext=ctext, title="ENCRYPTED TEXT:")
                 except ValueError:
@@ -82,7 +85,7 @@ def index():
 
             elif request.form.get("enc_dec") == 'Decrypt':
                 try:
-                    ctext = Vigenere(key).vigenere_decode(pt, LANG, ALPHABET)
+                    ctext = Vigenere(key).vigenere_decode(plaintext, LANG, ALPHABET)
                     return render_template(
                         "index.html", cyptext=ctext, title="DECRYPTED TEXT:")
                 except ValueError:
