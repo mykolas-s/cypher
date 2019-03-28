@@ -18,7 +18,7 @@ class ngram:
     def __init__(self, f="ngrams/english_quadgrams.txt"):
         # load a file containing ngrams and counts, calculate log probabilities
         self.ngrams = {}
-        with open(f) as file:
+        with open(f, encoding='utf-8') as file:
             for line in file:
                 key, count = line.lower().split(" ")
                 self.ngrams[key] = int(count)

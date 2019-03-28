@@ -24,7 +24,7 @@ def index():
         # BREAK (WITHOUT KNOWING CYPHER TYPE)
         if request.form.get("enc_dec") == ("Break"):
             try:
-                broken = crack_cipher(plaintext, LANG)
+                broken = crack_cipher(plaintext, LANG, ALPHABET)
                 if len(broken) == 2:
                     key, text = str(broken[0]) + ", Caesar", broken[1]
                     return render_template(
@@ -33,14 +33,18 @@ def index():
                         title="KEY, CYPHER: ",
                         footnote="DECRYPTED TEXT: ",
                         cyptext2=text)
+                elif broken == "This text is most likely encoded in Vigenere. The program can break lithuanian text encoded only in Caesar's":
+                    return render_template(
+                        "index.html",
+                        cyptext2=broken.upper())                    
                 else:
                     return render_template(
                         "index.html",
                         broken=broken,
                         title="POSSIBLE KEYS AND DECRYPTED TEXT USING THEM:")
-            except ValueError:
+            except (ValueError, IndexError):
                 return apology(
-                    "'break' function can be used on english text only. Sorry!")
+                    "please provide text in chosen language")
         # CAESAR
         if request.form.get("cypher") == 'caesar':
             # set key. If key is not a number, return apology
