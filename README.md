@@ -1,4 +1,5 @@
 <Cypher>
+The project is deployed at https://cypher-vsoai.appspot.com/
 
 Cypher is a web application, which have 3 features: it can encode, decode or break (without knowing particular encryption key and cypher type) text using two types of cyphers: [Caesar](https://en.wikipedia.org/wiki/Caesar_cipher) and [Vigenere](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher)
 
@@ -6,11 +7,11 @@ Cypher is a web application, which have 3 features: it can encode, decode or bre
 A microframework for Python – [Flask](http://flask.pocoo.org/)
 
 # Supported languages
-Cypher currently supports English and Lithuanian languages for encryption and decryption. However, only English is supported for breaking the cyphertext.
+Cypher currently supports English and Lithuanian languages for encryption, decryption and breaking Caesar's cypher. However, only English is supported for breaking cyphertext in Vigenere's.
 
 # Usage
 It's pretty straightforward – enter a piece of text you would like to encrypt/decrypt/break and choose the method. 
-The program uses quadgram statistics for breaking a cypher. This is not a foolproof method, it can only return best guesses for encryption key and cypher type. If program estimates Caesar cypher was used, it outputs statistically the most viable key (and decrypted text with that key). If it estimates Vigenere was used, it outputs statistically the most viable keys and corresponding decrypted texts for each key lenght from 3 to 10.
+The program uses ngram statistics for breaking a cypher. This is not a foolproof method, it can only return best guesses for encryption key and cypher type. If program estimates Caesar cypher was used, it outputs statistically the most viable key (and decrypted text with that key). If it estimates Vigenere was used, it outputs statistically the most viable keys and corresponding decrypted texts for each key lenght from 3 to 10.
 Breaking Vigenere might take up some time depending on text lenght.
 
 # Licence
