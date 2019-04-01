@@ -116,7 +116,8 @@ def crack_vigenere(
 
 def crack_cipher(
     ctext,
-    LANG=[ascii_lowercase, ascii_uppercase]):
+    LANG=[ascii_lowercase, ascii_uppercase],
+    ALPHABET=len(ascii_lowercase)):
     # Check if cipher is monoalphabetic (caesar) or polyalphabetic (vigenere)
     # using Index of Coincidence
     ctext_copy = ctext[::]
@@ -136,9 +137,46 @@ def crack_cipher(
         ic_numerator += count * (count - 1)
     ic = round(ic_numerator / (total_n * (total_n - 1)), 3)
 
-    if ic > 0.053:
-        print("PROBABLY CAESAR, I.C.:", ic)
-        return crack_caesar(ctext_copy)
+    if LANG == [ascii_lowercase, ascii_uppercase]:
+        if ic > 0.053:
+            print("PROBABLY CAESAR, I.C.:", ic)
+            return crack_caesar(ctext_copy, LANG, ALPHABET)
+        else:
+            print("PROBABLY VIGENERE, I.C.:", ic)
+            return crack_vigenere(ctext_copy, LANG, ALPHABET)
     else:
-        print("PROBABLY VIGENERE, I.C.:", ic)
-        return crack_vigenere(ctext_copy)
+        if ic > 0.058:
+            print("PROBABLY CAESAR, I.C.:", ic)
+            return crack_caesar_lt(ctext_copy, LANG, ALPHABET)
+        else:
+            print("PROBABLY VIGENERE, I.C.:", ic)
+            message = "This text is most likely encoded in Vigenere. The program can break lithuanian text encoded only in Caesar's"
+            return message
+
+
+def crack_caesar_lt(
+        ctext,
+        LANG=[ascii_lowercase, ascii_uppercase],
+        ALPHABET=len(ascii_lowercase)):
+    # crack Caesar using bigrams statistics
+    # preserve text with punctuation
+    ctext_c = ctext[::]
+
+    # leave only letters in ctext
+    ctext = re.sub(r'[^a-z]', '', ctext.lower())
+
+    bigram = ngram('ngrams/lt_bigrams.txt')  # load our bigram statistics
+    # calculate score for key=1
+    plaintext = Caesar(1).caesar_decode(ctext, LANG, ALPHABET)
+    best_score, best_key = bigram.score(plaintext), 1
+
+    # check for the bestscoring key
+    for i in range(2, 26):
+        plaintext = Caesar(i).caesar_decode(ctext, LANG, ALPHABET)
+        plaintext_score = bigram.score(plaintext)
+        if plaintext_score > best_score:
+            best_score, best_key = plaintext_score, i
+
+    plaintext = Caesar(best_key).caesar_decode(ctext_c, LANG, ALPHABET)
+    print('Decrypted text with key', best_key, ':', plaintext)
+    return best_key, plaintext
